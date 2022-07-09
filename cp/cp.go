@@ -7,6 +7,7 @@ import (
 	prb "github.com/cheggaaa/pb/v3"
 )
 
+//go:generate mockgen . os.Create,os.OpenFile
 func CopyFile(from string, to string, limit int, offset int) error {
 	src, err := os.OpenFile(from, os.O_RDONLY, 0o644)
 	if err != nil {
