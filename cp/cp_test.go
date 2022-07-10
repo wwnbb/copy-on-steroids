@@ -68,7 +68,7 @@ func TestCopyFile(t *testing.T) {
 	assertFilesEqual(t, fn, fd)
 }
 
-func testCopyOffset(t *testing.T) {
+func TestCopyOffset(t *testing.T) {
 	fn := "f1.txt"
 	fd := "f2.txt"
 	defer cleanUp(fn, fd)
@@ -77,7 +77,7 @@ func testCopyOffset(t *testing.T) {
 	assertFilesEqualP(t, fn, fd, 10, 0)
 }
 
-func testCopyLimit(t *testing.T) {
+func TestCopyLimit(t *testing.T) {
 	fn := "f1.txt"
 	fd := "f2.txt"
 	defer cleanUp(fn, fd)
@@ -86,7 +86,7 @@ func testCopyLimit(t *testing.T) {
 	assertFilesEqualP(t, fn, fd, 0, 10)
 }
 
-func testCopyOffsetAndLimit(t *testing.T) {
+func TestCopyOffsetAndLimit(t *testing.T) {
 	fn := "f1.txt"
 	fd := "f2.txt"
 	defer cleanUp(fn, fd)
