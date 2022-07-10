@@ -1,4 +1,7 @@
-![example workflow](https://github.com/wwnbb/copy-on-steroids/actions/workflows/go.yml/badge.svg)
-# copy-on-steroids
+[![Go](https://github.com/wwnbb/copy-on-steroids/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/wwnbb/copy-on-steroids/actions/workflows/go.yml)
+# dumb-copy
 
-Allows you to conveniently and easily copy files
+dump implementation of linux dd comand with cobra, progress bar
+
+
+Allows you to copy files
