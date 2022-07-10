@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		source := args[0]
 		dest := args[1]
-		cp.CopyFile(source, dest, limit, offset)
+		cp.CopyFile(source, dest, offset, limit)
 	},
 }
 

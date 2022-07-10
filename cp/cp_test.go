@@ -16,28 +16,28 @@ func createTestFile(name string, size uint) {
 	file.Close()
 }
 
-func assertFilesEqualP(t *testing.T, lhs_path string, rhs_path string, offset int, limit int) (bool, error) {
+func assertFilesEqualP(lhs_path string, rhs_path string, start int, end int) bool {
 	lhs_bytes, err := os.ReadFile(lhs_path)
 	if err != nil {
 		log.Fatal(err)
-		return false, err
+		return false
 	}
 	rhs_bytes, err := os.ReadFile(rhs_path)
 	if err != nil {
 		log.Fatal(err)
-		return false, err
+		return false
 	}
-	if limit <= 0 {
-		limit = len(lhs_bytes)
+	if start <= 0 {
+		start = 0
 	}
-	if offset <= 0 {
-		offset = 0
+	if end <= 0 {
+		end = len(lhs_bytes)
 	}
-	return bytes.Equal(lhs_bytes[offset:limit], rhs_bytes), nil
+	return bytes.Equal(lhs_bytes[start:end], rhs_bytes)
 }
 
-func assertFilesEqual(t *testing.T, lhs_path string, rhs_path string) (bool, error) {
-	return assertFilesEqualP(t, lhs_path, rhs_path, 0, 0)
+func assertFilesEqual(lhs_path string, rhs_path string) bool {
+	return assertFilesEqualP(lhs_path, rhs_path, 0, 0)
 }
 
 func cleanUp(file_names ...string) {
@@ -51,12 +51,14 @@ func cleanUp(file_names ...string) {
 
 // TestHelloName calls greetings.Hello with a name, checking
 // for a valid return value.
-func TestAssertFilesEqual(t *testing.T) {
+func TestAssertFilesEqual(t *testing.T) { // comment here
 	f1, f2 := "f1.txt", "f2.txt"
 	defer cleanUp(f1, f2)
 	createTestFile("f1.txt", 100)
 	createTestFile("f2.txt", 100)
-	assertFilesEqual(t, "f1.txt", "f2.txt")
+	if assertFilesEqual("f1.txt", "f2.txt") != false {
+		t.Errorf("Files f1 and f2 are equal")
+	}
 }
 
 func TestCopyFile(t *testing.T) {
@@ -65,7 +67,9 @@ func TestCopyFile(t *testing.T) {
 	defer cleanUp(fn, fd)
 	createTestFile(fn, 100)
 	CopyFile(fn, fd, 0, 0)
-	assertFilesEqual(t, fn, fd)
+	if assertFilesEqual(fn, fd) != true {
+		t.Errorf("Files f1 and f2 are not equal")
+	}
 }
 
 func TestCopyOffset(t *testing.T) {
@@ -74,7 +78,9 @@ func TestCopyOffset(t *testing.T) {
 	defer cleanUp(fn, fd)
 	createTestFile(fn, 1000)
 	CopyFile(fn, fd, 10, 0)
-	assertFilesEqualP(t, fn, fd, 10, 0)
+	if assertFilesEqualP(fn, fd, 10, 0) != true {
+		t.Errorf("Files f1 and f2 are not equal")
+	}
 }
 
 func TestCopyLimit(t *testing.T) {
@@ -82,8 +88,10 @@ func TestCopyLimit(t *testing.T) {
 	fd := "f2.txt"
 	defer cleanUp(fn, fd)
 	createTestFile(fn, 1000)
-	CopyFile(fn, fd, 10, 0)
-	assertFilesEqualP(t, fn, fd, 0, 10)
+	CopyFile(fn, fd, 0, 10)
+	if assertFilesEqualP(fn, fd, 0, 10) != true {
+		t.Errorf("Files f1 and f2 are not equal")
+	}
 }
 
 func TestCopyOffsetAndLimit(t *testing.T) {
@@ -91,6 +99,8 @@ func TestCopyOffsetAndLimit(t *testing.T) {
 	fd := "f2.txt"
 	defer cleanUp(fn, fd)
 	createTestFile(fn, 1000)
-	CopyFile(fn, fd, 0, 10)
-	assertFilesEqualP(t, fn, fd, 10, 10)
+	CopyFile(fn, fd, 10, 200)
+	if assertFilesEqualP(fn, fd, 10, 210) != true {
+		t.Errorf("Files f1 and f2 are not equal")
+	}
 }
